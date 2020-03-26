@@ -1,0 +1,8 @@
+{
+    "dirPath":{
+        "keyUsed":"../keyUsed/",
+        "imagePath":"../images/",
+        "outputPath":"../output/",
+        "logs":"../logs/"
+    }
+}

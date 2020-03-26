@@ -1,0 +1,17 @@
+{
+  "name": "withtinyPng",
+  "version": "0.0.1",
+  "description": "withtinyPng",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "vonmarshall",
+  "license": "ISC",
+  "dependencies": {
+    "tinify": "^1.6.0-beta.2"
+  },
+  "devDependencies": {
+    "@types/node": "^13.7.2"
+  }
+}
