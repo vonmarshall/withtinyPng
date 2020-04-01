@@ -8,7 +8,7 @@ import * as path from "path";
  * @param filePath 
  */
 export function isExistsSync(filePath:string) {
-    let flag:boolean = fs.isExistsSync(filePath);
+    let flag:boolean = fs.existsSync(filePath);
     return flag;
 } 
 
@@ -41,7 +41,7 @@ export function readConfig(filePath:string) {
  * 获取tinyPng key
  */
 export function getTinyConf() {
-    let tinyPath:string = path.resolve('.', '../config/tinifyKey.json');
+    let tinyPath:string = path.resolve('.', '../withtinyPng/config/tinifyKey.json');
     let keyList:any = readConfig(tinyPath);
     return keyList;
 }
@@ -50,21 +50,34 @@ export function getTinyConf() {
  *  获取公共配置
  */
 export function getConfig() {
-    let cfgPath:string = path.resolve('.', '../config/config.json');
+    let cfgPath:string = path.resolve('.', '../withtinyPng/config/config.json');
     let cfgList:any = readConfig(cfgPath);
     return cfgList;
 }
 
-
-export function getOneDirList(dirpath:string = '') {
-    
+/**
+ * 获取指定目录下文件列表
+ * @param dirpath 
+ * @param type
+ */
+export function getOneDirList(dirpath:string = '', type:number = 0) {
+    let list:any = [];
     if (dirpath) {
-
+        list = fs.readdirSync(dirpath);
     }else {
         let config = getConfig();
-        dirpath = config['']
+        dirpath = config['dirPath']['imagePath'];
+        list = fs.readdirSync(dirpath);
     }
-
+    if (list.length <= 0) {
+        return list;
+    }
+    if (type == 1) {
+        for (let i in list) {
+            list[i] = dirpath + list[i];
+        }
+    }
+    return list;
 }
 
 /**
@@ -75,9 +88,8 @@ export function getOneDirList(dirpath:string = '') {
  * @param extname 
  */
 export function writeStringToFile(string: string ,putPath: string, expire: string = '', extname: string = 'csv') {
-    let  fileName = putPath + expire +'.csv';
-    let writeData = '';
-    writeData = string + '\r\n';
+    let fileName:string = putPath + expire +'.csv';
+    let writeData:string = string + '\r\n';
     try {
         fs.appendFileSync(fileName, writeData);
     }catch (error) {
@@ -93,12 +105,12 @@ export function writeStringToFile(string: string ,putPath: string, expire: strin
  * @param extname 
  */
 export function writeOneArrayToFile(data: any ,putPath: string, expire: string = '', extname: string = 'csv') {
-    let  fileName = putPath + expire +'.csv';
+    let  fileName:string = putPath + expire +'.csv';
     if (!Array.isArray(data) || data.length <= 0) {
         console.log('数据应为数组！');
         return;
     }
-    let writeData = '';
+    let writeData:string = '';
     writeData = data.join(",");
     writeData = writeData + '\r\n';
     try {
@@ -117,12 +129,12 @@ export function writeOneArrayToFile(data: any ,putPath: string, expire: string =
  * @param extname 
  */
 export function writeMultiArrayTOFile(data: any, putPath: string, expire: string = '', extname: string = 'csv') {
-    let  fileName = putPath + expire + '.csv';
+    let  fileName:string = putPath + expire + '.csv';
     if (!Array.isArray(data) || data.length <= 0) {
         console.log('数据应为数组！');
         return;
     }
-    let writeData = '';
+    let writeData:string = '';
     for (let i in data) {
         writeData = writeData + data[i].join(",") + '\r\n';
     }
@@ -143,11 +155,13 @@ export function getCsvData(filepath) {
     if (!flag) {
         return data;
     }
-    let list:any = fs.readFileSync(filepath, 'utf8');
+    let list:string = fs.readFileSync(filepath, 'utf8');
     let rows:any = list.split("\r\n");
     for (let i in rows) {
-        let info = rows[i].replace(/\"/g, "").replace(/[\\]/g,"").split(",");
-        data.push(info);
+        if (rows[i]) {
+            let info = rows[i].replace(/\"/g, "").replace(/[\\]/g,"").split(",");
+            data.push(info);
+        }
     }
     return data;
 }

@@ -1,8 +1,8 @@
 {
     "dirPath":{
-        "keyUsed":"../keyUsed/",
-        "imagePath":"../images/",
-        "outputPath":"../output/",
-        "logs":"../logs/"
+        "keyUsed":"../withtinyPng/keyUsed/",
+        "imagePath":"../withtinyPng/images/",
+        "outputPath":"../withtinyPng/output/",
+        "logs":"../withtinyPng/logs/"
     }
 }
