@@ -1,4 +1,5 @@
 import * as common from "./common";
+import * as fs from "fs";
 
 const tinify = require("tinify");
 let nowUsedkey = '';
@@ -153,6 +154,70 @@ export function compressImages(data:any, inputPath:string = '', outputPath:strin
         source.toFile(outputPath + data);
     }
 }
+
+/**
+ * 压缩本地图片
+ * @param info 
+ * @param inputPath 
+ * @param outputPath 
+ */
+export function compressImagesfromFile(info:string, inputPath:string = '', outputPath:string = '') {
+    return tinify.fromFile(inputPath + info).toFile(outputPath + info, function (err){
+        if (err instanceof tinify.AccountError) {
+            console.log("The error message is: " + err.message);
+            // Verify your API key and account limit.
+          } else if (err instanceof tinify.ClientError) {
+            // Check your source image and request options.
+          } else if (err instanceof tinify.ServerError) {
+            // Temporary issue with the Tinify API.
+          } else if (err instanceof tinify.ConnectionError) {
+            // A network connection error occurred.
+          } else {
+            // Something else went wrong, unrelated to the Tinify API.
+          }
+    });
+}
+
+/**
+ * 压缩远程图片
+ * @param info 
+ * @param url 
+ * @param outputPath 
+ */
+export function compressImagesfromUrl(info:string, url:string, outputPath:string = '') {
+    return tinify.fromUrl(url).toFile(outputPath + info, function (err){
+        if (err instanceof tinify.AccountError) {
+            console.log("The error message is: " + err.message);
+            // Verify your API key and account limit.
+          } else if (err instanceof tinify.ClientError) {
+            // Check your source image and request options.
+          } else if (err instanceof tinify.ServerError) {
+            // Temporary issue with the Tinify API.
+          } else if (err instanceof tinify.ConnectionError) {
+            // A network connection error occurred.
+          } else {
+            // Something else went wrong, unrelated to the Tinify API.
+          }
+    });
+
+}
+
+/**
+ * 读取图片buffer写入文件
+ * @param info 
+ * @param inputPath 
+ * @param outputPath 
+ */
+export function compressImagesfrombuffer(info:string, inputPath:string = '', outputPath:string = '') {
+    fs.readFile(inputPath + info, function(err, sourceData) {
+        if (err) throw err;
+        tinify.fromBuffer(sourceData).toBuffer(function(err, resultData) {
+          if (err) throw err;
+          fs.writeFileSync(outputPath + info, resultData);
+        });
+      });
+}
+
 
 /**
  * 图片裁剪
